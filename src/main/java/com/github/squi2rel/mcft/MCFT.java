@@ -55,8 +55,11 @@ public final class MCFT extends JavaPlugin implements PluginMessageListener, Lis
         buf.skipBytes(16);
         switch (s) {
             case "mcft:tracking_params" -> {
-                if (models.get(player.getUniqueId()) == null) getLogger().info("玩家 " + player.getDisplayName() + " 正在使用MCFT");
-                models.put(player.getUniqueId(), new FTModel(EyeTrackingRect.read(buf), EyeTrackingRect.read(buf), MouthTrackingRect.read(buf)));
+                FTModel old = models.get(player.getUniqueId());
+                if (old == null) getLogger().info("玩家 " + player.getDisplayName() + " 正在使用MCFT");
+                FTModel now = new FTModel(EyeTrackingRect.read(buf), EyeTrackingRect.read(buf), MouthTrackingRect.read(buf), buf.readBoolean());
+                if (old != null) now.enabled = old.enabled;
+                models.put(player.getUniqueId(), now);
             }
             case "mcft:tracking_update" -> {
                 FTModel model = models.get(player.getUniqueId());
@@ -96,6 +99,7 @@ public final class MCFT extends JavaPlugin implements PluginMessageListener, Lis
             model.eyeR.write(buf);
             model.eyeL.write(buf);
             model.mouth.write(buf);
+            buf.writeBoolean(model.isFlat);
             byte[] data = new byte[buf.readableBytes()];
             buf.readBytes(data);
             return data;

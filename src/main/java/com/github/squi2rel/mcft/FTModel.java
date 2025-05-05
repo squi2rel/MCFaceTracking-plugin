@@ -9,13 +9,15 @@ public class FTModel {
     public EyeTrackingRect eyeR;
     public EyeTrackingRect eyeL;
     public MouthTrackingRect mouth;
+    public boolean isFlat;
     public transient long lastReceived = 0;
     public transient boolean enabled = false;
 
-    public FTModel(EyeTrackingRect eyeR, EyeTrackingRect eyeL, MouthTrackingRect mouth) {
+    public FTModel(EyeTrackingRect eyeR, EyeTrackingRect eyeL, MouthTrackingRect mouth, boolean isFlat) {
         this.eyeR = eyeR;
         this.eyeL = eyeL;
         this.mouth = mouth;
+        this.isFlat = isFlat;
     }
 
     @SuppressWarnings("unused")
