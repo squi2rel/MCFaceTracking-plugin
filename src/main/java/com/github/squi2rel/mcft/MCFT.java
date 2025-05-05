@@ -114,7 +114,9 @@ public final class MCFT extends JavaPlugin implements PluginMessageListener, Lis
             buf2.readBytes(data);
             buf.writeShort(data.length);
             buf.writeBytes(data);
-            return data;
+            byte[] out = new byte[buf.readableBytes()];
+            buf.readBytes(out);
+            return out;
         } finally {
             buf.release();
             buf2.release();
