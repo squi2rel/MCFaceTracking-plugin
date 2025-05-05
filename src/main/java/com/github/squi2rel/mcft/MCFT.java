@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
@@ -39,12 +40,13 @@ public final class MCFT extends JavaPlugin implements PluginMessageListener, Lis
         models.forEach((u, m) -> {
             if (!m.enabled) return;
             byte[] data = writeParams(m, u);
-            for (Player target : getServer().getOnlinePlayers()) {
-                if (!target.equals(player)) {
-                    target.sendPluginMessage(this, "mcft:tracking_params", data);
-                }
-            }
+            player.sendPluginMessage(this, "mcft:tracking_params", data);
         });
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        models.remove(event.getPlayer().getUniqueId());
     }
 
     @Override
