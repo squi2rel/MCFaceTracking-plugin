@@ -72,7 +72,7 @@ public final class MCFT extends JavaPlugin implements PluginMessageListener, Lis
                         }
                     }
                 }
-                byte[] data = writeSync(model);
+                byte[] data = writeSync(model, player.getUniqueId());
                 for (Player target : nearbyPlayers(player.getLocation(), 128)) {
                     if (!target.equals(player)) {
                         target.sendPluginMessage(this, "mcft:tracking_update", data);
@@ -102,17 +102,22 @@ public final class MCFT extends JavaPlugin implements PluginMessageListener, Lis
         }
     }
 
-    public static byte[] writeSync(FTModel model) {
+    public static byte[] writeSync(FTModel model, UUID uuid) {
         ByteBuf buf = PooledByteBufAllocator.DEFAULT.heapBuffer();
+        ByteBuf buf2 = PooledByteBufAllocator.DEFAULT.heapBuffer();
         try {
-            model.eyeR.writeSync(buf);
-            model.eyeL.writeSync(buf);
-            model.mouth.writeSync(buf);
-            byte[] data = new byte[buf.readableBytes()];
-            buf.readBytes(data);
+            writeUuid(buf, uuid);
+            model.eyeR.writeSync(buf2);
+            model.eyeL.writeSync(buf2);
+            model.mouth.writeSync(buf2);
+            byte[] data = new byte[buf2.readableBytes()];
+            buf2.readBytes(data);
+            buf.writeShort(data.length);
+            buf.writeBytes(data);
             return data;
         } finally {
             buf.release();
+            buf2.release();
         }
     }
 
