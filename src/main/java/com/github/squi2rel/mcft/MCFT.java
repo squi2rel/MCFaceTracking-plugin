@@ -79,7 +79,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
                 }
                 case "mcft:tracking_update" -> {
                     FTModel model = models.get(player.getUniqueId());
-                    if (model == null) return;
+                    if (model == null || System.currentTimeMillis() - model.lastReceived - 10 < 1000 / fps) return;
                     byte[] ref = new byte[buf.readShort()];
                     buf.readBytes(ref);
                     model.readSync(ref);
