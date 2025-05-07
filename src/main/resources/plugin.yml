@@ -1,10 +1,12 @@
-name: MCFT
+name: mcft
 version: '1.0'
 main: com.github.squi2rel.mcft.MCFT
 api-version: '1.21'
 authors: [ squi2rel ]
 description: Face Tracking for Minecraft
 website: github.com/squi2rel
-channels:
-  - mcft:tracking_params
-  - mcft:tracking_update
+commands:
+  mcftreload:
+    description: Reload config
+    usage: /mcftreload
+    permission: mcft.reload
