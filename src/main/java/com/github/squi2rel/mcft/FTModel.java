@@ -10,8 +10,8 @@ public class FTModel {
     public EyeTrackingRect eyeL;
     public MouthTrackingRect mouth;
     public boolean isFlat;
-    public transient long lastReceived = 0;
     public transient boolean enabled = false;
+    public transient long lastReceived = 0;
 
     public FTModel(EyeTrackingRect eyeR, EyeTrackingRect eyeL, MouthTrackingRect mouth, boolean isFlat) {
         this.eyeR = eyeR;
@@ -20,9 +20,10 @@ public class FTModel {
         this.isFlat = isFlat;
     }
 
-    @SuppressWarnings("unused")
-    public boolean active() {
-        return System.currentTimeMillis() - lastReceived < 3000;
+    public void update() {
+        eyeR.update();
+        eyeL.update();
+        if (!isFlat) mouth.update();
     }
 
     public void readSync(byte[] data) {
@@ -32,5 +33,11 @@ public class FTModel {
         mouth.readSync(buf);
         if (buf.readableBytes() != 0) throw new IllegalArgumentException("buffer remaining " + buf.readableBytes() + " bytes");
         lastReceived = System.currentTimeMillis();
+    }
+
+    public void validate(boolean init) {
+        eyeR.validate(init);
+        eyeL.validate(init);
+        mouth.validate(init);
     }
 }

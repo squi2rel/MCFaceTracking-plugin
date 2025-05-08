@@ -17,6 +17,11 @@ public class TrackingRect extends Rect {
         this.v2 = v2;
     }
 
+    public void set(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public void set(float w, float h, float u1, float v1, float u2, float v2) {
         this.w = w;
         this.h = h;
@@ -34,5 +39,20 @@ public class TrackingRect extends Rect {
 
     public void write(ByteBuf buf) {
         Rect.write(new Rect(x, y, w, h, u1, v1, u2, v2), buf);
+    }
+
+    public void update() {
+    }
+
+    public void validate(boolean init) {
+        if (!init) return;
+        checkInRange(u1, 0, 1);
+        checkInRange(v1, 0, 1);
+        checkInRange(u2, 0, 1);
+        checkInRange(v2, 0, 1);
+    }
+
+    public static void checkInRange(float val, float min, float max) {
+        if (!(val >= min && val <= max)) throw new IllegalArgumentException(String.format("%f should be between %f and %f", val, min, max));
     }
 }

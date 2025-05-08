@@ -75,7 +75,16 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
                     if (old == null) getLogger().info("玩家 " + player.getDisplayName() + " 正在使用MCFT");
                     FTModel now = new FTModel(EyeTrackingRect.read(buf), EyeTrackingRect.read(buf), MouthTrackingRect.read(buf), buf.readBoolean());
                     if (old != null) now.enabled = old.enabled;
+                    now.validate(true);
                     models.put(player.getUniqueId(), now);
+                    if (now.enabled) {
+                        byte[] data = writeParams(now, player.getUniqueId());
+                        for (Player target : getServer().getOnlinePlayers()) {
+                            if (!target.equals(player)) {
+                                target.sendPluginMessage(this, "mcft:tracking_params", data);
+                            }
+                        }
+                    }
                 }
                 case "mcft:tracking_update" -> {
                     FTModel model = models.get(player.getUniqueId());
@@ -83,6 +92,8 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
                     byte[] ref = new byte[buf.readShort()];
                     buf.readBytes(ref);
                     model.readSync(ref);
+                    model.validate(false);
+                    model.update();
                     if (!model.enabled) {
                         model.enabled = true;
                         getLogger().info("玩家 " + player.getDisplayName() + " 已连接OSC");
