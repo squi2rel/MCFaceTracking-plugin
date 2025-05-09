@@ -56,7 +56,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
             models.forEach((u, m) -> {
                 if (m.enabled) player.sendPluginMessage(this, "mcft:tracking_params", writeParams(m, u));
             });
-        }, 20);
+        }, 40);
     }
 
     @EventHandler
@@ -113,7 +113,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
                 }
             }
         } catch (Exception e) {
-            player.kickPlayer(e.toString());
+            player.kickPlayer(e + ": " + e.getMessage());
             throw e;
         }
     }
