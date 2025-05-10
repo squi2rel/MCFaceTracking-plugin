@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 
 public class MouthTrackingRect extends TrackingRect {
     public transient float percent;
+    public transient float lastPercent;
 
     public MouthTrackingRect(float x, float y, float w, float h, float u1, float v1, float u2, float v2) {
         super(x, y, w, h, u1, v1, u2, v2);
@@ -16,17 +17,19 @@ public class MouthTrackingRect extends TrackingRect {
 
     @Override
     public void readSync(ByteBuf buf) {
+        lastPercent = percent;
         percent = buf.readFloat();
     }
 
     @Override
-    public void update() {
-         float r = Math.max(percent - 0.15f, 0f) / 0.85f;
-         h = ih * r;
-         y = iy - ih * (1 - r);
-         float a = ih * percent;
-         x = ix + a;
-         w = iw - a * 2;
+    public void update(float delta) {
+        float p = lerp(delta, lastPercent, percent);
+        float r = Math.max(p - 0.05f, 0f) / 0.95f;
+        h = ih * r;
+        y = iy - ih * (1 - r);
+        float a = ih * p;
+        x = ix + a;
+        w = iw - a * 2;
     }
 
     @Override

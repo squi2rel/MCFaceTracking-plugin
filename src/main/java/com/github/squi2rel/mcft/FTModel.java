@@ -20,10 +20,11 @@ public class FTModel {
         this.isFlat = isFlat;
     }
 
-    public void update() {
-        eyeR.update();
-        eyeL.update();
-        if (!isFlat) mouth.update();
+    public void update(float fps) {
+        float delta = Math.clamp(System.currentTimeMillis() - lastReceived / 1000f * fps, 0, 1);
+        eyeR.update(delta);
+        eyeL.update(delta);
+        if (!isFlat) mouth.update(delta);
     }
 
     public void readSync(byte[] data) {

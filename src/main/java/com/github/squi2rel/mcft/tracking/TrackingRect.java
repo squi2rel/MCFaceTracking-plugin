@@ -10,17 +10,16 @@ public class TrackingRect extends Rect {
         super(0, 0, 0, 0);
     }
 
+    public TrackingRect(float x, float y, float w, float h) {
+        super(x, y, w, h);
+    }
+
     public TrackingRect(float x, float y, float w, float h, float u1, float v1, float u2, float v2) {
         super(x, y, w, h);
         this.u1 = u1;
         this.v1 = v1;
         this.u2 = u2;
         this.v2 = v2;
-    }
-
-    public void set(float x, float y) {
-        this.x = x;
-        this.y = y;
     }
 
     public void set(float w, float h, float u1, float v1, float u2, float v2) {
@@ -49,7 +48,7 @@ public class TrackingRect extends Rect {
         Rect.write(tmp.set(ix, iy, iw, ih, u1, v1, u2, v2), buf);
     }
 
-    public void update() {
+    public void update(float delta) {
     }
 
     public void validate(boolean init) {

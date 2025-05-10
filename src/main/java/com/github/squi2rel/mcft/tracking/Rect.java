@@ -44,6 +44,21 @@ public class Rect {
         return this;
     }
 
+    public void set(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void lerpPos(float delta, Rect src, Rect dest) {
+        if (src == null) {
+            x = dest.x;
+            y = dest.y;
+            return;
+        }
+        x = lerp(delta, src.x, dest.x);
+        y = lerp(delta, src.y, dest.y);
+    }
+
     public static void writePos(Rect rect, ByteBuf buf) {
         buf.writeFloat(rect.x);
         buf.writeFloat(rect.y);
@@ -66,6 +81,10 @@ public class Rect {
             buf.writeFloat(rect.iw);
             buf.writeFloat(rect.ih);
         }
+    }
+
+    public static float lerp(float delta, float start, float end) {
+        return start + delta * (end - start);
     }
 
     public static Rect read(ByteBuf buf) {

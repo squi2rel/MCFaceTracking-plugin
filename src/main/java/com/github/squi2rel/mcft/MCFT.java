@@ -93,7 +93,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
                     buf.readBytes(ref);
                     model.readSync(ref);
                     model.validate(false);
-                    model.update();
+                    model.update(fps);
                     if (!model.enabled) {
                         model.enabled = true;
                         getLogger().info("玩家 " + player.getDisplayName() + " 已连接OSC");
