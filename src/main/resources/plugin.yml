@@ -1,5 +1,5 @@
 name: mcft
-version: '1.0'
+version: '1.0.1'
 main: com.github.squi2rel.mcft.MCFT
 api-version: '1.21'
 authors: [ squi2rel ]
