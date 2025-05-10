@@ -3,6 +3,7 @@ package com.github.squi2rel.mcft;
 import com.github.squi2rel.mcft.tracking.EyeTrackingRect;
 import com.github.squi2rel.mcft.tracking.MouthTrackingRect;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
@@ -153,9 +154,10 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
         }
     }
 
-    public static byte[] writeConfig(int fps) {
+    public byte[] writeConfig(int fps) {
         ByteBuf buf = PooledByteBufAllocator.DEFAULT.heapBuffer();
         try {
+            writeString(buf, getDescription().getVersion());
             buf.writeInt(fps);
             byte[] data = new byte[buf.readableBytes()];
             buf.readBytes(data);
@@ -184,6 +186,20 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
             buf.release();
             buf2.release();
         }
+    }
+
+    public static void writeString(ByteBuf buf, String s) {
+        write(buf, ByteBufUtil.utf8MaxBytes(s));
+        ByteBufUtil.writeUtf8(buf, s);
+    }
+
+    public static void write(ByteBuf buf, int i) {
+        while ((i & -128) != 0) {
+            buf.writeByte(i & 127 | 128);
+            i >>>= 7;
+        }
+
+        buf.writeByte(i);
     }
 
     public static List<Player> nearbyPlayers(Location pos, double r) {
