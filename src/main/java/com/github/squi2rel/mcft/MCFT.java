@@ -189,8 +189,13 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
     }
 
     public static void writeString(ByteBuf buf, String s) {
-        write(buf, ByteBufUtil.utf8MaxBytes(s));
-        ByteBufUtil.writeUtf8(buf, s);
+        ByteBuf tmp = buf.alloc().buffer(ByteBufUtil.utf8MaxBytes(s));
+        try {
+            write(buf, ByteBufUtil.writeUtf8(tmp, s));
+            buf.writeBytes(tmp);
+        } finally {
+            tmp.release();
+        }
     }
 
     public static void write(ByteBuf buf, int i) {
