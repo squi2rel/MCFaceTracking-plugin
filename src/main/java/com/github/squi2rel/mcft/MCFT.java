@@ -80,11 +80,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
                     models.put(player.getUniqueId(), now);
                     if (now.enabled) {
                         byte[] data = writeParams(now, player.getUniqueId());
-                        for (Player target : getServer().getOnlinePlayers()) {
-                            if (!target.equals(player)) {
-                                target.sendPluginMessage(this, "mcft:tracking_params", data);
-                            }
-                        }
+                        for (Player target : getServer().getOnlinePlayers()) target.sendPluginMessage(this, "mcft:tracking_params", data);
                     }
                 }
                 case "mcft:tracking_update" -> {
@@ -99,18 +95,10 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
                         model.enabled = true;
                         getLogger().info("玩家 " + player.getDisplayName() + " 已连接OSC");
                         byte[] data = writeParams(model, player.getUniqueId());
-                        for (Player target : getServer().getOnlinePlayers()) {
-                            if (!target.equals(player)) {
-                                target.sendPluginMessage(this, "mcft:tracking_params", data);
-                            }
-                        }
+                        for (Player target : getServer().getOnlinePlayers()) target.sendPluginMessage(this, "mcft:tracking_params", data);
                     }
                     byte[] data = writeSync(model, player.getUniqueId());
-                    for (Player target : nearbyPlayers(player.getLocation(), syncRadius)) {
-                        if (!target.equals(player)) {
-                            target.sendPluginMessage(this, "mcft:tracking_update", data);
-                        }
-                    }
+                    for (Player target : nearbyPlayers(player.getLocation(), syncRadius)) target.sendPluginMessage(this, "mcft:tracking_update", data);
                 }
             }
         } catch (Exception e) {
