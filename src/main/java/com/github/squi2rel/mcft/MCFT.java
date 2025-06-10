@@ -102,31 +102,31 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
                 }
             }
         } catch (Exception e) {
-            player.kickPlayer(e + ": " + e.getMessage());
+            player.kickPlayer(e.toString());
             throw e;
         }
     }
 
-    public void broadcast() {
+    private void broadcast() {
         byte[] data = writeConfig(fps);
         for (Player player : getServer().getOnlinePlayers()) {
             player.sendPluginMessage(this, "mcft:config", data);
         }
     }
 
-    public void loadConfig() {
+    private void loadConfig() {
         saveDefaultConfig();
         FileConfiguration config = getConfig();
         fps = config.getInt("fps");
         syncRadius = config.getInt("syncRadius");
     }
 
-    public static void writeUuid(ByteBuf buf, UUID uuid) {
+    private static void writeUuid(ByteBuf buf, UUID uuid) {
         buf.writeLong(uuid.getMostSignificantBits());
         buf.writeLong(uuid.getLeastSignificantBits());
     }
 
-    public static byte[] writeParams(FTModel model, UUID uuid) {
+    private static byte[] writeParams(FTModel model, UUID uuid) {
         ByteBuf buf = PooledByteBufAllocator.DEFAULT.heapBuffer();
         try {
             writeUuid(buf, uuid);
@@ -142,7 +142,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
         }
     }
 
-    public byte[] writeConfig(int fps) {
+    private byte[] writeConfig(int fps) {
         ByteBuf buf = PooledByteBufAllocator.DEFAULT.heapBuffer();
         try {
             writeString(buf, getDescription().getVersion());
@@ -155,7 +155,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
         }
     }
 
-    public static byte[] writeSync(FTModel model, UUID uuid) {
+    private static byte[] writeSync(FTModel model, UUID uuid) {
         ByteBuf buf = PooledByteBufAllocator.DEFAULT.heapBuffer();
         ByteBuf buf2 = PooledByteBufAllocator.DEFAULT.heapBuffer();
         try {
@@ -176,7 +176,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
         }
     }
 
-    public static void writeString(ByteBuf buf, String s) {
+    private static void writeString(ByteBuf buf, String s) {
         ByteBuf tmp = buf.alloc().buffer(ByteBufUtil.utf8MaxBytes(s));
         try {
             write(buf, ByteBufUtil.writeUtf8(tmp, s));
@@ -186,7 +186,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
         }
     }
 
-    public static void write(ByteBuf buf, int i) {
+    private static void write(ByteBuf buf, int i) {
         while ((i & -128) != 0) {
             buf.writeByte(i & 127 | 128);
             i >>>= 7;
@@ -195,7 +195,7 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
         buf.writeByte(i);
     }
 
-    public static List<Player> nearbyPlayers(Location pos, double r) {
+    private static List<Player> nearbyPlayers(Location pos, double r) {
         List<Player> players = new ArrayList<>();
         double radiusSquared = r * r;
         for (Player player : Bukkit.getOnlinePlayers()) {
