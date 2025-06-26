@@ -67,8 +67,8 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
 
     @Override
     public void onPluginMessageReceived(@NotNull String s, @NotNull Player player, @NotNull byte[] bytes) {
+        ByteBuf buf = Unpooled.wrappedBuffer(bytes);
         try {
-            ByteBuf buf = Unpooled.wrappedBuffer(bytes);
             buf.skipBytes(16);
             switch (s) {
                 case "mcft:tracking_params" -> {
@@ -104,6 +104,8 @@ public final class MCFT extends JavaPlugin implements CommandExecutor, PluginMes
         } catch (Exception e) {
             player.kickPlayer(e.toString());
             throw e;
+        } finally {
+            buf.release();
         }
     }
 
